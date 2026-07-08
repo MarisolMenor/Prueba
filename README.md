@@ -74,6 +74,17 @@ Proveedor: Dell LATAM (Tel: +1-555-0199)
 ```
 
 ---
+## 🌿 Flujo de Trabajo con Git
+
+Para la entrega y revisión del código, deberás seguir estrictamente el siguiente flujo de trabajo:
+
+1. **Clonar el proyecto:** Clona este repositorio en tu máquina local antes de comenzar la prueba.
+2. **Crear una nueva rama:** Antes de escribir código o modificar la base de datos, crea una rama exclusiva para tu solución utilizando tu nombre con la estructura: `feature/prueba-[TuNombre]`.
+3. **Ubicación del Script SQL:** Dentro de la carpeta de tu proyecto, deberás crear un archivo llamado `EntrevistaBackend.sql` que contenga el script completo de la Fase 2 (creación de tablas, inserciones y alteraciones), garantizando que si se ejecuta desde cero, monte la base de datos completa.
+4. **Subir el código:** Al finalizar el tiempo de la prueba, deberás hacer `commit` de tus cambios (incluyendo el archivo `.sql` y el código fuente `.vb`) y realizar un `push` de tu rama hacia este repositorio remoto. 
+   *(Nota: No realices ningún Merge o Pull Request a la rama `main`).*
+
+---
 
 ## 🎯 ¿Qué evaluaremos?
 
