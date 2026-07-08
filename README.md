@@ -44,11 +44,11 @@ GO
 
 ---
 
-## 📋 El Desafío (Live Coding)
+## 📋 El Desafío
 
 Durante la prueba, deberás crear una **Aplicación de Consola en VB.NET (.NET Framework 4.8)** e implementar la lógica de negocio para el siguiente escenario:
 
-### Escenario: Control de Stock e Integración con BD
+### Fase 1: Control de Stock e Integración con BD
 Necesitamos construir un método llamado `ActualizarStockProducto` que se encargue de procesar una venta en el sistema restando las existencias de la base de datos de forma segura.
 
 ### Requerimientos Técnicos:
@@ -58,6 +58,20 @@ Necesitamos construir un método llamado `ActualizarStockProducto` que se encarg
 4. **Validación en Consola:** En el método `Main()`, deberás invocar la función simulando dos escenarios:
    - Una venta exitosa (ej: restar 2 unidades al producto con ID 1).
    - Una venta fallida por falta de stock (ej: intentar restar 6 unidades al producto con ID 2).
+
+### Fase 2: Evolución del Modelo y Migración Automática (Script por Código)
+Para simular un cambio de requerimientos en producción, deberás programar la actualización de la estructura. **No debes usar el SQL Server Management Studio para esto**; el objetivo es poder lanzar el script de base de datos para que en futuras ejecuciones la BD ya se genere completa.
+
+Deberás implementar un método que ejecute de forma programática las siguientes acciones en SQL:
+1. **Modificación de Base de Datos:** Crear una nueva tabla llamada `Proveedores` (con `IdProveedor INT IDENTITY`, `Nombre VARCHAR` y `Telefono VARCHAR`) y relacionarla mediante una Clave Foránea (`FOREIGN KEY`) con la tabla de `Productos`. Deberás insertar proveedores de prueba y asociar los productos existentes a ellos de manera correcta.
+2. **Consulta Relacional:** Construir un nuevo método en VB.NET llamado `MostrarDetalleProducto` que reciba un `idProducto (Integer)` y muestre en la consola la información del artículo junto con los datos de su nuevo proveedor asociado utilizando una única consulta optimizada (`INNER JOIN`).
+
+*Salida esperada en consola para la Fase 2:*
+```text
+Producto: Laptop Dell Vostro | Precio: \$1,200.50
+Proveedor: Dell LATAM (Tel: +1-555-0199)
+------------------------------------------------
+```
 
 ---
 
