@@ -1,0 +1,5 @@
+C:\Users\pruebas\source\repos\PruebaMarvinRivera\PruebaTecnica\PruebaTecnica\obj\Debug\net8.0\PruebaTecnica.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\pruebas\source\repos\PruebaMarvinRivera\PruebaTecnica\PruebaTecnica\obj\Debug\net8.0\PruebaTecnica.AssemblyInfoInputs.cache
+C:\Users\pruebas\source\repos\PruebaMarvinRivera\PruebaTecnica\PruebaTecnica\obj\Debug\net8.0\PruebaTecnica.AssemblyInfo.vb
+C:\Users\pruebas\source\repos\PruebaMarvinRivera\PruebaTecnica\PruebaTecnica\obj\Debug\net8.0\PruebaTecnica.vbproj.CoreCompileInputs.cache
+C:\Users\pruebas\source\repos\PruebaMarvinRivera\PruebaTecnica\PruebaTecnica\obj\Debug\net8.0\PruebaTecnica.sourcelink.json

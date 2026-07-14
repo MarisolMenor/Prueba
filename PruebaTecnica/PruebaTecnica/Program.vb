@@ -1,6 +1,9 @@
 Imports System
+Imports Microsoft.Data.SqlClient
 
 Module Program
+    Private ReadOnly stringConnection As String = "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=EntrevistaBackend;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;"
+
     Sub Main()
         ' =========================================================================
         ' PRUEBAS FASE 1: Control de Stock (Ventas)
@@ -48,4 +51,27 @@ Module Program
         Console.ReadLine()
     End Sub
 
+    Private Sub MostrarDetalleProducto(idProducto As Integer)
+        Throw New NotImplementedException()
+    End Sub
+
+    Private Function ActualizarStockProducto(idProducto As Integer, cantidadVendida As Integer) As Boolean
+        Dim query As String = "sp_VentaProductos @IdProducto, @Cantidad"
+        Try
+            Using conn As New SqlConnection(stringConnection)
+                Using cmd As New SqlCommand(query, conn)
+                    cmd.CommandType = Data.CommandType.StoredProcedure
+                    cmd.Parameters.AddWithValue("@IdProducto", idProducto)
+                    cmd.Parameters.AddWithValue("@Cantidad", cantidadVendida)
+                    conn.Open()
+                    cmd.ExecuteNonQuery()
+                    Return True
+                End Using
+            End Using
+        Catch ex As SqlException
+            Return False
+        Catch ex As Exception
+            Return False
+        End Try
+    End Function
 End Module

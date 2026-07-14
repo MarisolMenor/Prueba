@@ -1,24 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\marisolm\\source\\repos\\Prueba\\PruebaTecnica\\PruebaTecnica\\PruebaTecnica.vbproj": {}
+    "C:\\Users\\pruebas\\source\\repos\\PruebaMarvinRivera\\PruebaTecnica\\PruebaTecnica\\PruebaTecnica.vbproj": {}
   },
   "projects": {
-    "C:\\Users\\marisolm\\source\\repos\\Prueba\\PruebaTecnica\\PruebaTecnica\\PruebaTecnica.vbproj": {
+    "C:\\Users\\pruebas\\source\\repos\\PruebaMarvinRivera\\PruebaTecnica\\PruebaTecnica\\PruebaTecnica.vbproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\marisolm\\source\\repos\\Prueba\\PruebaTecnica\\PruebaTecnica\\PruebaTecnica.vbproj",
+        "projectUniqueName": "C:\\Users\\pruebas\\source\\repos\\PruebaMarvinRivera\\PruebaTecnica\\PruebaTecnica\\PruebaTecnica.vbproj",
         "projectName": "PruebaTecnica",
-        "projectPath": "C:\\Users\\marisolm\\source\\repos\\Prueba\\PruebaTecnica\\PruebaTecnica\\PruebaTecnica.vbproj",
-        "packagesPath": "C:\\Users\\marisolm\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\marisolm\\source\\repos\\Prueba\\PruebaTecnica\\PruebaTecnica\\obj\\",
+        "projectPath": "C:\\Users\\pruebas\\source\\repos\\PruebaMarvinRivera\\PruebaTecnica\\PruebaTecnica\\PruebaTecnica.vbproj",
+        "packagesPath": "C:\\Users\\pruebas\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\pruebas\\source\\repos\\PruebaMarvinRivera\\PruebaTecnica\\PruebaTecnica\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\marisolm\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\ComponentOne.config",
+          "C:\\Users\\pruebas\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,12 +25,12 @@
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\MESCIUS\\ComponentOne\\Packages": {},
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
+            "framework": "net8.0",
             "targetAlias": "net8.0",
             "projectReferences": {}
           }
@@ -46,11 +45,18 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
         "net8.0": {
+          "framework": "net8.0",
           "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.Data.SqlClient": {
+              "target": "Package",
+              "version": "[7.0.2, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -67,7 +73,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.315/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
