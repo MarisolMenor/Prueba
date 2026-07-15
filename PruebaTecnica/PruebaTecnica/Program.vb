@@ -1,6 +1,9 @@
 Imports System
-
+Imports Microsoft.Data.SqlClient
+Imports System.Text.Json
 Module Program
+    Private connString As String = "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=EntrevistaBackend;Integrated Security=True"
+
     Sub Main()
         ' =========================================================================
         ' PRUEBAS FASE 1: Control de Stock (Ventas)
@@ -35,7 +38,7 @@ Module Program
 
         ' DECLARACIÓN DEL JSON: Nota cómo se escapan las comillas usando "" en VB.NET
         ' El JSON equivale a: {"Nombre": "Monitor ASUS 24\"", "Cantidad": 10}
-        Dim jsonDeEntrada As String = "{ ""Nombre"": ""Monitor ASUS 24"""""", ""Cantidad"": 10 }"
+        Dim jsonDeEntrada As String = "{ ""Nombre"": ""Monitor ASUS 24\"""", ""Cantidad"": 10 }"
 
         Console.WriteLine("Procesando JSON de entrada...")
         IncrementarStockDesdeJSON(jsonDeEntrada)
@@ -47,5 +50,134 @@ Module Program
         Console.WriteLine("" & vbCrLf & "Presiona ENTER para salir...")
         Console.ReadLine()
     End Sub
+    Function ActualizarStockProducto(idProducto As Integer, cantidadVendida As Integer) As Boolean
+        Dim filasAfectadas As Integer = 0
 
+        Try
+            Using conn As New SqlConnection(connString)
+                conn.Open()
+                Dim query As String = "UPDATE Productos SET Stock = Stock - @Cantidad WHERE IdProducto = @Id AND Stock >= @Cantidad"
+                Using cmd As New SqlCommand(query, conn)
+                    cmd.Parameters.AddWithValue("@Cantidad", cantidadVendida)
+                    cmd.Parameters.AddWithValue("@Id", idProducto)
+                    filasAfectadas = cmd.ExecuteNonQuery()
+                End Using
+            End Using
+        Catch ex As SqlException
+            Console.WriteLine($"Error al actualizar stock: {ex.Message}")
+            Return False
+        End Try
+
+        Return filasAfectadas > 0
+    End Function
+    Sub EjecutarMigracionProveedores()
+        Try
+            Using conn As New SqlConnection(connString)
+                conn.Open()
+
+                Dim crearTablaProveedores As String = "
+            IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Proveedores')
+            BEGIN
+                CREATE TABLE Proveedores (
+                    IdProveedor INT IDENTITY(1,1) PRIMARY KEY,
+                    Nombre VARCHAR(100) NOT NULL
+                )
+            END"
+                Using cmd As New SqlCommand(crearTablaProveedores, conn)
+                    cmd.ExecuteNonQuery()
+                End Using
+
+                Dim agregarColumna As String = "
+            IF NOT EXISTS (
+                SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
+                WHERE TABLE_NAME = 'Productos' AND COLUMN_NAME = 'IdProveedor'
+            )
+            BEGIN
+                ALTER TABLE Productos ADD IdProveedor INT NULL
+                ALTER TABLE Productos ADD CONSTRAINT FK_Productos_Proveedores
+                    FOREIGN KEY (IdProveedor) REFERENCES Proveedores(IdProveedor)
+            END"
+                Using cmd As New SqlCommand(agregarColumna, conn)
+                    cmd.ExecuteNonQuery()
+                End Using
+
+                Dim seedProveedor As String = "
+            IF NOT EXISTS (SELECT 1 FROM Proveedores WHERE Nombre = 'Dell LATAM')
+            BEGIN
+                INSERT INTO Proveedores (Nombre) VALUES ('Dell LATAM')
+                UPDATE Productos SET IdProveedor = SCOPE_IDENTITY() WHERE IdProducto = 1
+            END"
+                Using cmd As New SqlCommand(seedProveedor, conn)
+                    cmd.ExecuteNonQuery()
+                End Using
+            End Using
+
+            Console.WriteLine("Migración de proveedores ejecutada correctamente.")
+
+        Catch ex As SqlException
+            Console.WriteLine($"Error de base de datos durante la migración: {ex.Message}")
+        Catch ex As Exception
+            Console.WriteLine($"Error inesperado durante la migración: {ex.Message}")
+        End Try
+    End Sub
+
+    Sub MostrarDetalleProducto(idProducto As Integer)
+        Try
+            Using conn As New SqlConnection(connString)
+                conn.Open()
+                Dim query As String = "
+            SELECT P.Nombre, P.Stock, P.Precio, ISNULL(S.Nombre, 'Sin proveedor asignado') AS Proveedor
+            FROM Productos P
+            LEFT JOIN Proveedores S ON P.IdProveedor = S.IdProveedor
+            WHERE P.IdProducto = @Id"
+
+                Using cmd As New SqlCommand(query, conn)
+                    cmd.Parameters.AddWithValue("@Id", idProducto)
+                    Using reader As SqlDataReader = cmd.ExecuteReader()
+                        If reader.Read() Then
+                            Console.WriteLine($"Producto: {reader("Nombre")} | Stock: {reader("Stock")} | Precio: {reader("Precio"):C} | Proveedor: {reader("Proveedor")}")
+                        Else
+                            Console.WriteLine($"No se encontró el producto con Id {idProducto}")
+                        End If
+                    End Using
+                End Using
+            End Using
+
+        Catch ex As SqlException
+            Console.WriteLine($"Error de base de datos al consultar el producto: {ex.Message}")
+        Catch ex As Exception
+            Console.WriteLine($"Error inesperado al consultar el producto: {ex.Message}")
+        End Try
+    End Sub
+    Sub IncrementarStockDesdeJSON(json As String)
+        Try
+            Using doc As JsonDocument = JsonDocument.Parse(json)
+                Dim root As JsonElement = doc.RootElement
+                Dim nombreProducto As String = root.GetProperty("Nombre").GetString()
+                Dim cantidad As Integer = root.GetProperty("Cantidad").GetInt32()
+
+                Using conn As New SqlConnection(connString)
+                    conn.Open()
+                    Dim query As String = "UPDATE Productos SET Stock = Stock + @Cantidad WHERE Nombre = @Nombre"
+                    Using cmd As New SqlCommand(query, conn)
+                        cmd.Parameters.AddWithValue("@Cantidad", cantidad)
+                        cmd.Parameters.AddWithValue("@Nombre", nombreProducto)
+                        Dim filas As Integer = cmd.ExecuteNonQuery()
+
+                        If filas > 0 Then
+                            Console.WriteLine($"Stock incrementado en {cantidad} unidades para '{nombreProducto}'.")
+                        Else
+                            Console.WriteLine($"No se encontró ningún producto llamado '{nombreProducto}'.")
+                        End If
+                    End Using
+                End Using
+            End Using
+        Catch ex As JsonException
+            Console.WriteLine($"Error al parsear el JSON: {ex.Message}")
+        Catch ex As SqlException
+            Console.WriteLine($"Error de base de datos: {ex.Message}")
+        Catch ex As Exception
+            Console.WriteLine($"Error inesperado: {ex.Message}")
+        End Try
+    End Sub
 End Module
